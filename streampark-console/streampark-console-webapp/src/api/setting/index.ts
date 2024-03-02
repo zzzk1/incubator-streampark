@@ -23,6 +23,8 @@ enum SETTING_APi {
   CHECK_HADOOP = '/flink/setting/checkHadoop',
   SYNC = '/flink/setting/sync',
   UPDATE = '/flink/setting/update',
+  UPDATE_DOCKER = '/flink/setting/update/docker',
+  UPDATE_ALERT = '/flink/setting/update/alert/email',
 }
 /**
  * Get system settings
@@ -56,5 +58,42 @@ export function fetchSystemSettingUpdate(data: {
 export function fetchCheckHadoop(): Promise<boolean> {
   return defHttp.post({
     url: SETTING_APi.CHECK_HADOOP,
+  });
+}
+
+//TODO: Getting docker configuration through the backend interface
+/**
+ * get docker setting info
+ */
+export function fetchDockerConfig() {
+  return defHttp.post({ url: '/flink/setting/all' });
+}
+
+/**
+ * get alert setting info
+ */
+export function fetchAlertConfig() {
+  return defHttp.post({ url: '/flink/setting/all' });
+}
+
+/**
+ * Update docker setting
+ * @returns {Promise<Boolean>}
+ */
+export function fetchDockerUpdate(data: Recordable): Promise<boolean> {
+  return defHttp.post({
+    url: SETTING_APi.UPDATE_DOCKER,
+    data,
+  });
+}
+
+/**
+ * Update alert setting
+ * @returns {Promise<Boolean>}
+ */
+export function fetchAlertUpdate(data: Recordable): Promise<boolean> {
+  return defHttp.post({
+    url: SETTING_APi.UPDATE_ALERT,
+    data,
   });
 }
