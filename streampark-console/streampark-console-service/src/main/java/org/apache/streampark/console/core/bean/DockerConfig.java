@@ -27,8 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The DockerConfig class represents the configuration for an email system. It holds Registered address,
- *  user, password, and namespace.
+ * The DockerConfig class represents the configuration for an email system. It holds Registered
+ * address, user, password, and namespace.
  *
  * <p>This class also provides a static factory method to create an DockerConfig object from a map
  * of settings.
@@ -70,20 +70,20 @@ public class DockerConfig {
     }
     return null;
   }
-  
+
   public static List<Setting> toSettings(DockerConfig dockerConfig) {
     Setting address = new Setting();
     address.setSettingKey(SettingService.KEY_DOCKER_REGISTER_ADDRESS);
     address.setSettingValue(dockerConfig.getAddress());
-    
+
     Setting user = new Setting();
     user.setSettingKey(SettingService.KEY_DOCKER_REGISTER_USER);
     user.setSettingValue(dockerConfig.getUser());
-    
+
     Setting password = new Setting();
     password.setSettingKey(SettingService.KEY_DOCKER_REGISTER_PASSWORD);
     password.setSettingValue(dockerConfig.getPassword());
-    
+
     Setting namespace = new Setting();
     namespace.setSettingKey(SettingService.KEY_DOCKER_REGISTER_NAMESPACE);
     namespace.setSettingValue(dockerConfig.getNamespace());

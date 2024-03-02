@@ -17,14 +17,6 @@
 
 package org.apache.streampark.console.core.service.impl;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.AuthConfig;
-import com.github.dockerjava.api.model.AuthResponse;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import com.github.dockerjava.transport.DockerHttpClient;
 import org.apache.streampark.console.core.bean.DockerConfig;
 import org.apache.streampark.console.core.bean.MavenConfig;
 import org.apache.streampark.console.core.bean.ResponseResult;
@@ -37,6 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.AuthConfig;
+import com.github.dockerjava.api.model.AuthResponse;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -116,25 +116,25 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
         .getOrDefault(SettingService.KEY_INGRESS_MODE_DEFAULT, emptySetting)
         .getSettingValue();
   }
-  
+
   @Override
   public ResponseResult checkDocker(DockerConfig dockerConfig) {
     DockerClientConfig config =
-            DefaultDockerClientConfig.createDefaultConfigBuilder()
-                    .withRegistryUrl(dockerConfig.getAddress())
-                    .build();
-    
+        DefaultDockerClientConfig.createDefaultConfigBuilder()
+            .withRegistryUrl(dockerConfig.getAddress())
+            .build();
+
     DockerHttpClient httpClient =
-            new ApacheDockerHttpClient.Builder().dockerHost(config.getDockerHost()).build();
-    
+        new ApacheDockerHttpClient.Builder().dockerHost(config.getDockerHost()).build();
+
     ResponseResult result = new ResponseResult();
-    
+
     try (DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient)) {
       AuthConfig authConfig =
-              new AuthConfig()
-                      .withUsername(dockerConfig.getUser())
-                      .withPassword(dockerConfig.getPassword())
-                      .withRegistryAddress(dockerConfig.getAddress());
+          new AuthConfig()
+              .withUsername(dockerConfig.getUser())
+              .withPassword(dockerConfig.getPassword())
+              .withRegistryAddress(dockerConfig.getAddress());
       AuthResponse response = dockerClient.authCmd().withAuthConfig(authConfig).exec();
       if (response.getStatus().equals("Login Succeeded")) {
         result.setStatus(200);
@@ -148,7 +148,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
       } else if (e.getMessage().contains("Status 401")) {
         result.setStatus(500);
         result.setMsg(
-                "Failed to validate Docker registry, unauthorized: incorrect username or password ");
+            "Failed to validate Docker registry, unauthorized: incorrect username or password ");
       } else {
         result.setStatus(500);
         result.setMsg("Failed to validate Docker registry, error: " + e.getMessage());
@@ -156,7 +156,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
     return result;
   }
-  
+
   @Override
   public boolean updateDocker(DockerConfig dockerConfig) {
     List<Setting> settings = DockerConfig.toSettings(dockerConfig);
@@ -167,7 +167,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
     return true;
   }
-  
+
   @Override
   public SenderEmail getSenderEmail() {
     try {
@@ -177,7 +177,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
       String userName = SETTINGS.get(SettingService.KEY_ALERT_EMAIL_USERNAME).getSettingValue();
       String password = SETTINGS.get(SettingService.KEY_ALERT_EMAIL_PASSWORD).getSettingValue();
       String ssl = SETTINGS.get(SettingService.KEY_ALERT_EMAIL_SSL).getSettingValue();
-      
+
       SenderEmail senderEmail = new SenderEmail();
       senderEmail.setHost(host);
       if (StringUtils.isNotBlank(port)) {
@@ -195,7 +195,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
     return null;
   }
-  
+
   @Override
   public ResponseResult checkEmail(SenderEmail senderEmail) {
     ResponseResult result = new ResponseResult();
@@ -206,12 +206,12 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
     props.put("mail.smtp.host", senderEmail.getHost());
     props.put("mail.smtp.port", senderEmail.getPort());
-    
+
     Session session = Session.getInstance(props);
     try {
       Transport transport = session.getTransport("smtp");
       transport.connect(
-              senderEmail.getHost(), senderEmail.getUserName(), senderEmail.getPassword());
+          senderEmail.getHost(), senderEmail.getUserName(), senderEmail.getPassword());
       transport.close();
       result.setStatus(200);
     } catch (MessagingException e) {
@@ -220,7 +220,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
     return result;
   }
-  
+
   @Override
   public boolean updateEmail(SenderEmail senderEmail) {
     List<Setting> settings = SenderEmail.toSettings(senderEmail);

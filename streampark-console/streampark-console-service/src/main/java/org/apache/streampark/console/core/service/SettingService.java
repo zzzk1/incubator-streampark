@@ -94,47 +94,44 @@ public interface SettingService extends IService<Setting> {
    * @return The default ingress mode.
    */
   String getIngressModeDefault();
-  
+
   /**
-   * Before updating the Docker settings, verify that the parameters are filled in correctly,
-   * We check whether it is correct or not by concatenating the given registration URL.
+   * Before updating the Docker settings, verify that the parameters are filled in correctly, We
+   * check whether it is correct or not by concatenating the given registration URL.
    *
    * @param dockerConfig Docker config to be checked
-   *
    * @return Server response value
    */
   ResponseResult checkDocker(DockerConfig dockerConfig);
-  
+
   /**
    * update docker config
    *
    * @param dockerConfig Docker config needs to be updated
-   *
    * @return Whether the update operation was successful
    */
   boolean updateDocker(DockerConfig dockerConfig);
-  
+
   /**
    * Retrieves the senderEmail
+   *
    * @return
    */
   SenderEmail getSenderEmail();
-  
+
   /**
-   * Before updating the email settings, verify that the parameters are filled in correctly,
-   * We check whether it is correct or not by concatenating the given host.
+   * Before updating the email settings, verify that the parameters are filled in correctly, We
+   * check whether it is correct or not by concatenating the given host.
    *
    * @param senderEmail email config to be checked
-   *
    * @return Server response value
    */
   ResponseResult checkEmail(SenderEmail senderEmail);
-  
+
   /**
    * update docker config
    *
    * @param senderEmail email config needs to be updated
-   *
    * @return Whether the update operation was successful
    */
   boolean updateEmail(SenderEmail senderEmail);

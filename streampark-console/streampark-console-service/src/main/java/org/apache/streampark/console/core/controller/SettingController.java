@@ -72,7 +72,7 @@ public class SettingController {
     boolean updated = settingService.update(setting);
     return RestResponse.success(updated);
   }
-  
+
   @Operation(summary = "get Docker config")
   @PostMapping("docker")
   @RequiresPermissions("setting:view")
@@ -80,7 +80,7 @@ public class SettingController {
     DockerConfig dockerConfig = DockerConfig.fromSetting();
     return RestResponse.success(dockerConfig);
   }
-  
+
   @Operation(summary = "check docker setting")
   @PostMapping("check/docker")
   @RequiresPermissions("setting:view")
@@ -88,7 +88,7 @@ public class SettingController {
     ResponseResult result = settingService.checkDocker(dockerConfig);
     return RestResponse.success(result);
   }
-  
+
   @Operation(summary = "Update docker setting")
   @PostMapping("update/docker")
   @RequiresPermissions("setting:update")
@@ -96,7 +96,7 @@ public class SettingController {
     boolean updated = settingService.updateDocker(dockerConfig);
     return RestResponse.success(updated);
   }
-  
+
   @Operation(summary = "get sender email")
   @PostMapping("email")
   @RequiresPermissions("setting:view")
@@ -104,7 +104,7 @@ public class SettingController {
     SenderEmail senderEmail = settingService.getSenderEmail();
     return RestResponse.success(senderEmail);
   }
-  
+
   @Operation(summary = "check email")
   @PostMapping("check/email")
   @RequiresPermissions("setting:view")
@@ -112,7 +112,7 @@ public class SettingController {
     ResponseResult result = settingService.checkEmail(senderEmail);
     return RestResponse.success(result);
   }
-  
+
   @Operation(summary = "Update sender email")
   @PostMapping("update/email")
   @RequiresPermissions("setting:update")
@@ -120,7 +120,7 @@ public class SettingController {
     boolean updated = settingService.updateEmail(senderEmail);
     return RestResponse.success(updated);
   }
-  
+
   @Operation(summary = "Check hadoop status")
   @PostMapping("checkHadoop")
   public RestResponse checkHadoop() {
