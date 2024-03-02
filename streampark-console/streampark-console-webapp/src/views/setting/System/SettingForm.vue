@@ -14,7 +14,6 @@
 -->
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { SettingTwoTone } from '@ant-design/icons-vue';
 import { BasicForm, FormSchema, useForm } from '/@/components/Form';
 import { BasicModal, useModalInner } from '/@/components/Modal';
 import {
@@ -22,11 +21,16 @@ import {
   fetchEmailUpdate,
   fetchDockerConfig,
   fetchDockerUpdate,
+  fetchVerifyDocker,
+  fetchVerifyEmail,
 } from '/@/api/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { isNullOrUnDef } from '/@/utils/is';
 import { settingFormSchema } from './config';
+import { SvgIcon } from '/@/components/Icon';
+import Swal from 'sweetalert2';
+
 const emit = defineEmits(['success', 'register']);
 const { createMessage } = useMessage();
 const { t } = useI18n();
@@ -63,11 +67,11 @@ const [registerModal, { closeModal, changeLoading }] = useModalInner(async (data
 });
 const [registerForm, { validate, setFieldsValue, resetFields }] = useForm({
   colon: true,
-  labelWidth: 180,
+  labelWidth: 140,
   name: 'SettingForm',
   labelCol: { span: 8 },
-  wrapperCol: { span: 15 },
-  baseColProps: { span: 23 },
+  wrapperCol: { span: 14 },
+  baseColProps: { span: 24 },
   showActionButtonGroup: false,
 });
 const formSchemas = computed((): FormSchema[] => {
@@ -85,9 +89,40 @@ const formSchemas = computed((): FormSchema[] => {
 async function handleOk() {
   try {
     const formData = await validate();
-    if (type.value === 'docker') await fetchDockerUpdate(formData);
-    if (type.value === 'email') await fetchEmailUpdate(formData);
-    createMessage.success(t('setting.system.update.success'));
+    if (type.value === 'docker') {
+      const resp = await fetchVerifyDocker(formData);
+      if (resp.status === 200) {
+        await fetchDockerUpdate(formData);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: resp.msg,
+          showConfirmButton: true,
+          timer: 3500,
+        });
+        return;
+      }
+    }
+    if (type.value === 'email') {
+      const resp = await fetchVerifyEmail(formData);
+      if (resp.status === 200) {
+        await fetchEmailUpdate(formData);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: resp.msg,
+          showConfirmButton: true,
+          timer: 3500,
+        });
+        return;
+      }
+    }
+    Swal.fire({
+      icon: 'success',
+      title: t('setting.system.update.success'),
+      showConfirmButton: false,
+      timer: 2000,
+    });
     closeModal();
     emit('success');
   } catch (error) {
@@ -102,15 +137,16 @@ async function afterClose() {
 <template>
   <BasicModal
       @register="registerModal"
-      :width="750"
+      :width="650"
       @ok="handleOk"
       :after-close="afterClose"
       centered
   >
     <template #title>
-      <SettingTwoTone class="ml-10px" theme="twoTone" two-tone-color="#4a9ff5" />
+      <SvgIcon v-if="type === 'docker'" name="docker" size="20" class="ml-10px" />
+      <SvgIcon v-if="type === 'email'" name="mail" size="18" class="ml-10px" />
       {{ title }}
     </template>
-    <BasicForm @register="registerForm" :schemas="formSchemas" />
+    <BasicForm @register="registerForm" :schemas="formSchemas" style="margin-top: 30px" />
   </BasicModal>
 </template>

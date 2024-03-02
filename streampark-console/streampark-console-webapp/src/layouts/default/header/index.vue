@@ -41,6 +41,13 @@
       </a-button>
       <Divider type="vertical" />
 
+      <Popover placement="bottom" trigger="hover" arrow-point-at-center>
+        <template #content>
+          <img src="/@/assets/images/join_wechat.png" alt="qrcode" class="h-150px w-150px" />
+        </template>
+        <Icon icon="ant-design:qrcode-outlined" :class="`${prefixCls}-action__item`" />
+      </Popover>
+
       <!-- Github info -->
       <Github :class="`${prefixCls}-action__item github-item`" />
       <!-- Theme Switch -->
@@ -69,7 +76,7 @@
   import { defineComponent, unref, computed } from 'vue';
 
   import { propTypes } from '/@/utils/propTypes';
-  import { Layout, Divider } from 'ant-design-vue';
+  import {Layout, Divider, Popover} from 'ant-design-vue';
   import { AppLogo } from '/@/components/Application';
   import LayoutMenu from '../menu/index.vue';
   import LayoutTrigger from '../trigger/index.vue';
@@ -101,10 +108,12 @@
   import { useLocale } from '/@/locales/useLocale';
   import { version } from '../../../../package.json';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import Icon from "/@/components/Icon/src/Icon.vue";
 
   export default defineComponent({
     name: 'LayoutHeader',
     components: {
+      Icon,
       Header: Layout.Header,
       AppLogo,
       LayoutTrigger,
@@ -121,6 +130,7 @@
       LockScreen,
       Divider,
       AppDarkModeToggle,
+      Popover,
     },
     props: {
       fixed: propTypes.bool,
