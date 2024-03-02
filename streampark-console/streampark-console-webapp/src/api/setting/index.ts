@@ -24,7 +24,7 @@ enum SETTING_APi {
   SYNC = '/flink/setting/sync',
   UPDATE = '/flink/setting/update',
   UPDATE_DOCKER = '/flink/setting/update/docker',
-  UPDATE_ALERT = '/flink/setting/update/alert/email',
+  UPDATE_ALERT = '/flink/setting/update/email',
 }
 /**
  * Get system settings
