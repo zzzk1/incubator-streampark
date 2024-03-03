@@ -113,7 +113,7 @@
 
 <template>
   <List>
-    <<template v-for="item in data">
+    <template v-for="item in data">
       <ListItem v-if="AvatarMap[item.settingKey]" :key="item.settingKey">
         <ListItemMeta style="width: 50%">
           <template #title>
